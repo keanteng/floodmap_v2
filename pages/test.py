@@ -612,7 +612,6 @@ def build_markup_for_logo(
     Returns
         str: full string with logo and title for sidebar
     """
-    binary_string = get_base64_of_bin_file(png_file)
     return """
             <style>
                 [data-testid="stSidebarNav"] {
@@ -655,7 +654,6 @@ def add_logo(png_file):
     Returns:
         None
     """
-    logo_markup = build_markup_for_logo(png_file)
     # st.sidebar.title("ciao")
     st.markdown(
         logo_markup,
@@ -756,7 +754,6 @@ st.set_page_config(layout="wide", page_title=params["browser_title"])
 toggle_menu_button()
 
 # Create sidebar
-add_logo("MA-logo.png")
 add_about()
 
 # Page title
