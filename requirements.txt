@@ -17,8 +17,8 @@ streamlit-folium
 streamlit-keplergl
 tropycal
 earthengine-api
-streamlit-ext==0.1.4
-pre-commit==2.18.1
+streamlit-ext
+pre-commit
 # git+https://github.com/giswqs/leafmap
 # git+https://github.com/giswqs/geemap
 
