@@ -756,7 +756,7 @@ st.set_page_config(layout="wide", page_title=params["browser_title"])
 toggle_menu_button()
 
 # Create sidebar
-add_logo("data/MA_logo.png")
+add_logo("MA_logo.png")
 add_about()
 
 # Page title
