@@ -8,16 +8,748 @@ import requests
 import streamlit as st
 # import streamlit_ext as ste
 from folium.plugins import Draw, Geocoder, MiniMap
-from src.config_parameters import params
-from src.utils import (
-    add_about,
-    add_logo,
-    set_tool_page_style,
-    toggle_menu_button,
-)
-from src.utils_ee import ee_initialize
-from src.utils_flood_analysis import derive_flood_extents
 from streamlit_folium import st_folium
+
+####################################################
+params = {
+    # Title browser tab
+    "browser_title": "Flood mapping tool - MapAction",
+    # Data scientists involved
+    "data_scientists": {
+        "Piet": "pgerrits@mapaction.org",
+        "Daniele": "dcastellana@mapaction.org",
+        "Cate": "cseale@mapaction.org",
+    },
+    # Urls
+    "url_data_science_wiki": (
+        "https://mapaction.atlassian.net/wiki/spaces/GAFO/overview"
+    ),
+    "url_gee": "https://earthengine.google.com/",
+    "url_project_wiki": (
+        "https://mapaction.atlassian.net/wiki/spaces/GAFO/pages/15920922751/"
+        "Rapid+flood+mapping+from+satellite+imagery"
+    ),
+    "url_github_repo": "https://github.com/mapaction/flood-extent-tool",
+    "url_sentinel_esa": (
+        "https://sentinel.esa.int/web/sentinel/user-guides/sentinel-1-sar"
+    ),
+    "url_sentinel_dataset": (
+        "https://developers.google.com/earth-engine/datasets/catalog/"
+        "COPERNICUS_S1_GRD"
+    ),
+    "url_sentinel_img": (
+        "https://sentinel.esa.int/documents/247904/4748961/Sentinel-1-Repeat-"
+        "Coverage-Frequency-Geometry-2021.jpg"
+    ),
+    "url_sentinel_img_location": (
+        "https://sentinel.esa.int/web/sentinel/missions/sentinel-1/"
+        "observation-scenario"
+    ),
+    "url_unspider_tutorial": (
+        "https://un-spider.org/advisory-support/recommended-practices/"
+        "recommended-practice-google-earth-engine-flood-mapping"
+    ),
+    "url_unspider_tutorial_detail": (
+        "https://un-spider.org/advisory-support/recommended-practices/"
+        "recommended-practice-google-earth-engine-flood-mapping/in-detail"
+    ),
+    "url_elevation_dataset": (
+        "https://developers.google.com/earth-engine/datasets/catalog/"
+        "WWF_HydroSHEDS_03VFDEM"
+    ),
+    "url_surface_water_dataset": (
+        "https://developers.google.com/earth-engine/datasets/catalog/"
+        "JRC_GSW1_4_GlobalSurfaceWater"
+    ),
+    "url_publication_1": (
+        "https://onlinelibrary.wiley.com/doi/full/10.1111/jfr3.12303"
+    ),
+    "url_publication_2": (
+        "https://www.sciencedirect.com/science/article/abs/pii/"
+        "S0924271620301702"
+    ),
+    # Layout and styles
+    ## Sidebar
+    "MA_logo_width": "60%",
+    "MA_logo_background_position": "35% 10%",
+    "sidebar_header": "Flood Mapping Tool",
+    "sidebar_header_fontsize": "30px",
+    "sidebar_header_fontweight": "bold",
+    "about_box_background_color": "#dae7f4",
+    ## Introduction and Documentation pages
+    "docs_fontsize": "1.2rem",
+    "docs_caption_fontsize": "1rem",
+    ## Tool page
+    "expander_header_fontsize": "23px",
+    "widget_header_fontsize": "18px",
+    "button_text_fontsize": "24px",
+    "button_text_fontweight": "bold",
+    "button_background_color": "#dae7f4",
+}
+
+import ee
+import streamlit as st
+from ee import oauth
+from google.oauth2 import service_account
+from src.utils import is_app_on_streamlit
+
+
+@st.experimental_memo
+def ee_initialize(force_use_service_account: bool = False):
+    """Initialise Google Earth Engine.
+
+    Checks whether the app is deployed on Streamlit Cloud and, based on the
+    result, initialises Google Earth Engine in different ways: if the app is
+    run locally, the credentials are retrieved from the user's credentials
+    stored in the local system (personal Google account is used). If the app
+    is deployed on Streamlit Cloud, credentials are taken from the secrets
+    field in the cloud (a dedicated service account is used).
+    Inputs:
+        force_use_service_account (bool): If True, the dedicated Google
+            service account is used, regardless of whether the app is run
+            locally or in the cloud. To be able to use a service account
+            locally, a file called "secrets.toml" should be added to the
+            folder ".streamlit", in the main project folder.
+
+    Returns:
+        None
+    """
+    if force_use_service_account or is_app_on_streamlit():
+        service_account_keys = st.secrets["ee_keys"]
+        credentials = service_account.Credentials.from_service_account_info(
+            service_account_keys, scopes=oauth.SCOPES
+        )
+        ee.Initialize(credentials)
+    else:
+        ee.Initialize()
+    
+    import time
+
+import ee
+
+
+def _check_task_completed(task_id, verbose=False):
+    """
+    Return True if a task export completes successfully, else returns false.
+
+    Inputs:
+        task_id (str): Google Earth Engine task id
+
+    Returns:
+        boolean
+
+    """
+    status = ee.data.getTaskStatus(task_id)[0]
+    if status["state"] in (
+        ee.batch.Task.State.CANCELLED,
+        ee.batch.Task.State.FAILED,
+    ):
+        if "error_message" in status:
+            if verbose:
+                print(status["error_message"])
+        return True
+    elif status["state"] == ee.batch.Task.State.COMPLETED:
+        return True
+    return False
+
+
+def wait_for_tasks(task_ids, timeout=3600, verbose=False):
+    """
+    Wait for tasks to complete, fail, or timeout.
+
+    Wait for all active tasks if task_ids is not provided.
+    Note: Tasks will not be canceled after timeout, and
+    may continue to run.
+    Inputs:
+        task_ids (list):
+        timeout (int):
+
+    Returns:
+        None
+    """
+    start = time.time()
+    elapsed = 0
+    while elapsed < timeout or timeout == 0:
+        elapsed = time.time() - start
+        finished = [_check_task_completed(task) for task in task_ids]
+        if all(finished):
+            if verbose:
+                print(f"Tasks {task_ids} completed after {elapsed}s")
+            return True
+        time.sleep(5)
+    if verbose:
+        print(
+            f"Stopped waiting for {len(task_ids)} tasks \
+            after {timeout} seconds"
+        )
+    return False
+
+
+def export_flood_data(
+    flooded_area_vector,
+    flooded_area_raster,
+    image_before_flood,
+    image_after_flood,
+    region,
+    filename="flood_extents",
+    verbose=False,
+):
+    """
+    Export the results of derive_flood_extents function to Google Drive.
+
+    Inputs:
+        flooded_area_vector (ee.FeatureCollection): Detected flood extents as
+            vector geometries.
+        flooded_area_raster (ee.Image): Detected flood extents as a binary
+            raster.
+        image_before_flood (ee.Image): The 'before' Sentinel-1 image.
+        image_after_flood (ee.Image): The 'after' Sentinel-1 image containing
+            view of the flood waters.
+        region (ee.Geometry.Polygon): Geographic extent of analysis area.
+        filename (str): Desired filename prefix for exported files
+
+    Returns:
+        None
+    """
+    if verbose:
+        print(
+            "Exporting detected flood extents to your Google Drive. \
+            Please wait..."
+        )
+    s1_before_task = ee.batch.Export.image.toDrive(
+        image=image_before_flood,
+        description="export_before_s1_scene",
+        scale=30,
+        region=region,
+        fileNamePrefix=filename + "_s1_before",
+        crs="EPSG:4326",
+        fileFormat="GeoTIFF",
+    )
+
+    s1_after_task = ee.batch.Export.image.toDrive(
+        image=image_after_flood,
+        description="export_flooded_s1_scene",
+        scale=30,
+        region=region,
+        fileNamePrefix=filename + "_s1_after",
+        crs="EPSG:4326",
+        fileFormat="GeoTIFF",
+    )
+
+    raster_task = ee.batch.Export.image.toDrive(
+        image=flooded_area_raster,
+        description="export_flood_extents_raster",
+        scale=30,
+        region=region,
+        fileNamePrefix=filename + "_raster",
+        crs="EPSG:4326",
+        fileFormat="GeoTIFF",
+    )
+
+    vector_task = ee.batch.Export.table.toDrive(
+        collection=flooded_area_vector,
+        description="export_flood_extents_polygons",
+        fileFormat="shp",
+        fileNamePrefix=filename + "_polygons",
+    )
+
+    s1_before_task.start()
+    s1_after_task.start()
+    raster_task.start()
+    vector_task.start()
+
+    if verbose:
+        print("Exporting before Sentinel-1 scene: Task id ", s1_before_task.id)
+        print("Exporting flooded Sentinel-1 scene: Task id ", s1_after_task.id)
+        print("Exporting flood extent geotiff: Task id ", raster_task.id)
+        print("Exporting flood extent shapefile:  Task id ", vector_task.id)
+
+    wait_for_tasks(
+        [s1_before_task.id, s1_after_task.id, raster_task.id, vector_task.id]
+    )
+
+
+def retrieve_image_collection(
+    search_region,
+    start_date,
+    end_date,
+    polarization="VH",
+    pass_direction="Ascending",
+):
+    """
+    Retrieve Sentinel-1 immage collection from Google Earth Engine.
+
+    Inputs:
+        search_region (ee.Geometry.Polygon): Geographic extent of image search.
+        start_date (str): Date in format yyyy-mm-dd, e.g., '2020-10-01'.
+        end_date (str): Date in format yyyy-mm-dd, e.g., '2020-10-01'.
+        polarization (str): Synthetic aperture radar polarization mode, e.g.,
+            'VH' or 'VV'. VH is mostly is the preferred polarization for
+            flood mapping.
+        pass_direction (str): Synthetic aperture radar pass direction, either
+            'Ascending' or 'Descending'.
+
+    Returns:
+        collection (ee.ImageCollection): Sentinel-1 images matching the search
+        criteria.
+    """
+    collection = (
+        ee.ImageCollection("COPERNICUS/S1_GRD")
+        .filter(ee.Filter.eq("instrumentMode", "IW"))
+        .filter(
+            ee.Filter.listContains(
+                "transmitterReceiverPolarisation", polarization
+            )
+        )
+        .filter(ee.Filter.eq("orbitProperties_pass", pass_direction.upper()))
+        .filter(ee.Filter.eq("resolution_meters", 10))
+        .filterDate(start_date, end_date)
+        .filterBounds(search_region)
+        .select(polarization)
+    )
+
+    return collection
+
+
+def smooth(image, smoothing_radius=50):
+    """
+    Reduce the radar speckle by smoothing.
+
+    Inputs:
+        image (ee.Image): Input image.
+        smoothing_radius (int): The radius of the kernel to use for focal mean
+            smoothing.
+
+    Returns:
+        smoothed_image (ee.Image): The resulting image after smoothing is
+            applied.
+    """
+    smoothed_image = image.focal_mean(
+        radius=smoothing_radius, kernelType="circle", units="meters"
+    )
+
+    return smoothed_image
+
+
+def mask_permanent_water(image):
+    """
+    Query the JRC Global Surface Water Mapping Layers, v1.3.
+
+    The goal is to determine where perennial water bodies (water > 10
+    months/yr), and mask these areas.
+    Inputs:
+        image (ee.Image): Input image.
+
+    Returns:
+        masked_image (ee.Image): The resulting image after surface water
+        masking is applied.
+    """
+    surface_water = ee.Image("JRC/GSW1_4/GlobalSurfaceWater").select(
+        "seasonality"
+    )
+    surface_water_mask = surface_water.gte(10).updateMask(
+        surface_water.gte(10)
+    )
+
+    # Flooded layer where perennial water bodies(water > 10 mo / yr) is
+    # assigned a 0 value
+    where_surface_water = image.where(surface_water_mask, 0)
+
+    masked_image = image.updateMask(where_surface_water)
+
+    return masked_image
+
+
+def reduce_noise(image):
+    """
+    Reduce noise in the image.
+
+    Compute connectivity of pixels to eliminate those connected to 8 or fewer
+    neighbours.
+    Inputs:
+        image (ee.Image): A binary image.
+
+    Returns:
+        reduced_noise_image (ee.Image): The resulting image after noise
+            reduction is applied.
+    """
+    connections = image.connectedPixelCount()
+    reduced_noise_image = image.updateMask(connections.gte(8))
+
+    return reduced_noise_image
+
+
+def mask_slopes(image):
+    """
+    Mask out areas with more than 5 % slope with a Digital Elevation Model.
+
+    Inputs:
+        image (ee.Image): Input image.
+    Returns:
+         slopes_masked (ee.Image): The resulting image after slope masking is
+            applied.
+    """
+    dem = ee.Image("WWF/HydroSHEDS/03VFDEM")
+    terrain = ee.Algorithms.Terrain(dem)
+    slope = terrain.select("slope")
+    slopes_masked = image.updateMask(slope.lt(5))
+
+    return slopes_masked
+
+
+def derive_flood_extents(
+    aoi,
+    before_start_date,
+    before_end_date,
+    after_start_date,
+    after_end_date,
+    difference_threshold=1.25,
+    polarization="VH",
+    pass_direction="Ascending",
+    export=False,
+    export_filename="flood_extents",
+):
+    """
+    Set start and end dates of a period BEFORE and AFTER a flood.
+
+    These periods need to be long enough for Sentinel-1 to acquire an image.
+
+    Inputs:
+        aoi (ee.Geometry.Polygon): Geographic extent of analysis area.
+        before_start_date (str): Date in format yyyy-mm-dd, e.g., '2020-10-01'.
+        before_end_date (str): Date in format yyyy-mm-dd, e.g., '2020-10-01'.
+        after_start_date (str): Date in format yyyy-mm-dd, e.g., '2020-10-01'.
+        after_end_date (str): Date in format yyyy-mm-dd, e.g., '2020-10-01'.
+        difference_threshold (float): Threshold to be applied on the
+            differenced image (after flood - before flood). It has been chosen
+            by trial and error. In case your flood extent result shows many
+            false-positive or negative signals, consider changing it.
+        export (bool): Flag to export derived flood extents to Google Drive
+        export_filename (str): Desired filename prefix for exported files. Only
+            used if export=True.
+
+    Returns:
+        flood_vectors (ee.FeatureCollection): Detected flood extents as vector
+            geometries.
+        flood_rasters (ee.Image): Detected flood extents as a binary raster.
+        before_filtered (ee.Image): The 'before' Sentinel-1 image.
+        after_filtered (ee.Image): The 'after' Sentinel-1 image containing view
+            of the flood waters.
+    """
+    before_flood_img_col = retrieve_image_collection(
+        search_region=aoi,
+        start_date=before_start_date,
+        end_date=before_end_date,
+        polarization=polarization,
+        pass_direction=pass_direction,
+    )
+    after_flood_img_col = retrieve_image_collection(
+        search_region=aoi,
+        start_date=after_start_date,
+        end_date=after_end_date,
+        polarization=polarization,
+        pass_direction=pass_direction,
+    )
+
+    # Create a mosaic of selected tiles and clip to study area
+    before_mosaic = before_flood_img_col.mosaic().clip(aoi)
+    after_mosaic = after_flood_img_col.mosaic().clip(aoi)
+
+    before_filtered = smooth(before_mosaic)
+    after_filtered = smooth(after_mosaic)
+
+    # Calculate the difference between the before and after images
+    difference = after_filtered.divide(before_filtered)
+
+    # Apply the predefined difference - threshold and create the flood extent
+    # mask
+    difference_binary = difference.gt(difference_threshold)
+    difference_binary_masked = mask_permanent_water(difference_binary)
+    difference_binary_masked_reduced_noise = reduce_noise(
+        difference_binary_masked
+    )
+    flood_rasters = mask_slopes(difference_binary_masked_reduced_noise)
+
+    # Export the extent of detected flood in vector format
+    flood_vectors = flood_rasters.reduceToVectors(
+        scale=10,
+        geometryType="polygon",
+        geometry=aoi,
+        eightConnected=False,
+        bestEffort=True,
+        tileScale=2,
+    )
+
+    if export:
+        export_flood_data(
+            flooded_area_vector=flood_vectors,
+            flooded_area_raster=flood_rasters,
+            image_before_flood=before_filtered,
+            image_after_flood=after_filtered,
+            region=aoi,
+            filename=export_filename,
+        )
+
+    return flood_vectors, flood_rasters, before_filtered, after_filtered
+
+import base64
+import os
+from datetime import date
+
+import streamlit as st
+
+# Check if app is deployed
+def is_app_on_streamlit():
+    """Check whether the app is on streamlit or runs locally."""
+    return "HOSTNAME" in os.environ and os.environ["HOSTNAME"] == "streamlit"
+
+
+# General layout
+def toggle_menu_button():
+    """If app is on streamlit, hide menu button."""
+    if is_app_on_streamlit():
+        st.markdown(
+            """
+        <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+        </style>
+        """,
+            unsafe_allow_html=True,
+        )
+
+
+# Home page
+def set_home_page_style():
+    """Set style home page."""
+    st.markdown(
+        """
+    <style> p { font-size: %s; } </style>
+    """
+        % params["docs_fontsize"],
+        unsafe_allow_html=True,
+    )
+
+
+# Documentation page
+def set_doc_page_style():
+    """Set style documentation page."""
+    st.markdown(
+        """
+    <style> p { font-size: %s; } </style>
+    """
+        % params["docs_fontsize"],
+        unsafe_allow_html=True,
+    )
+
+
+# Tool page
+def set_tool_page_style():
+    """Set style tool page."""
+    st.markdown(
+        """
+            <style>
+                .streamlit-expanderHeader {
+                    font-size: %s;
+                    color: #000053;
+                }
+                .stDateInput > label {
+                    font-size: %s;
+                }
+                .stSlider > label {
+                    font-size: %s;
+                }
+                .stRadio > label {
+                    font-size: %s;
+                }
+                .stButton > button {
+                    font-size: %s;
+                    font-weight: %s;
+                    background-color: %s;
+                }
+            </style>
+        """
+        % (
+            params["expander_header_fontsize"],
+            params["widget_header_fontsize"],
+            params["widget_header_fontsize"],
+            params["widget_header_fontsize"],
+            params["button_text_fontsize"],
+            params["button_text_fontweight"],
+            params["button_background_color"],
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+# Sidebar
+@st.cache(allow_output_mutation=True)
+def get_base64_of_bin_file(png_file):
+    """
+    Get base64 from image file.
+
+    Inputs:
+        png_file (str): image filename
+
+    Returns:
+        str: encoded ASCII file
+    """
+    with open(png_file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+
+def build_markup_for_logo(
+    png_file,
+):
+    """
+    Create full string for navigation bar, including logo and title.
+
+    Inputs:
+        png_file (str): image filename
+        background_position (str): position logo
+        image_width (str): width logo
+        image_height (str): height logo
+
+    Returns
+        str: full string with logo and title for sidebar
+    """
+    binary_string = get_base64_of_bin_file(png_file)
+    return """
+            <style>
+                [data-testid="stSidebarNav"] {
+                    background-image: url("data:image/png;base64,%s");
+                    background-repeat: no-repeat;
+                    padding-top: 50px;
+                    padding-bottom: 10px;
+                    background-position: %s;
+                    background-size: %s %s;
+                }
+                [data-testid="stSidebarNav"]::before {
+                    content: "%s";
+                    margin-left: 20px;
+                    margin-top: 20px;
+                    margin-bottom: 20px;
+                    font-size: %s;
+                    font-weight: %s;
+                    position: relative;
+                    text-align: center;
+                    top: 85px;
+                }
+            </style>
+            """ % (
+        binary_string,
+        params["MA_logo_background_position"],
+        params["MA_logo_width"],
+        "",
+        params["sidebar_header"],
+        params["sidebar_header_fontsize"],
+        params["sidebar_header_fontweight"],
+    )
+
+
+def add_logo(png_file):
+    """
+    Add logo to sidebar.
+
+    Inputs:
+        png_file (str): image filename
+    Returns:
+        None
+    """
+    logo_markup = build_markup_for_logo(png_file)
+    # st.sidebar.title("ciao")
+    st.markdown(
+        logo_markup,
+        unsafe_allow_html=True,
+    )
+
+
+def add_about():
+    """
+    Add about and contacts to sidebar.
+
+    Inputs:
+        None
+    Returns:
+        None
+    """
+    today = date.today().strftime("%B %d, %Y")
+
+    # About textbox
+    st.sidebar.markdown("## About")
+    st.sidebar.markdown(
+        """
+        <div class='warning' style='
+            background-color: %s;
+            margin: 0px;
+            padding: 1em;'
+        '>
+            <p style='
+                margin-left:1em;
+                margin: 0px;
+                font-size: 1rem;
+                margin-bottom: 1em;
+            '>
+                    Last update: %s
+            </p>
+            <p style='
+                margin-left:1em;
+                font-size: 1rem;
+                margin: 0px
+            '>
+                <a href='%s'>
+                Wiki reference page</a><br>
+                <a href='%s'>
+                GitHub repository</a><br>
+                <a href='%s'>
+                Data Science Lab</a>
+            </p>
+        </div>
+        """
+        % (
+            params["about_box_background_color"],
+            today,
+            params["url_project_wiki"],
+            params["url_github_repo"],
+            params["url_data_science_wiki"],
+        ),
+        unsafe_allow_html=True,
+    )
+
+    # Contacts textbox
+    st.sidebar.markdown(" ")
+    st.sidebar.markdown("## Contacts")
+
+    # Add data scientists and emails
+    contacts_text = ""
+    for ds, email in params["data_scientists"].items():
+        contacts_text += ds + (
+            "<span style='float:right; margin-right: 3px;'>"
+            "<a href='mailto:%s'>%s</a></span><br>" % (email, email)
+        )
+
+    # Add text box
+    st.sidebar.markdown(
+        """
+        <div class='warning' style='
+            background-color: %s;
+            margin: 0px;
+            padding: 1em;'
+        '>
+            <p style='
+                margin-left:1em;
+                font-size: 1rem;
+                margin: 0px
+            '>
+                %s
+            </p>
+        </div>
+        """
+        % (params["about_box_background_color"], contacts_text),
+        unsafe_allow_html=True,
+    )
+#####################################################
 
 # Page configuration
 st.set_page_config(layout="wide", page_title=params["browser_title"])
