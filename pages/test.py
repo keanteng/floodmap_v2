@@ -6,7 +6,7 @@ import folium
 import geemap.foliumap as geemap
 import requests
 import streamlit as st
-import streamlit_ext as ste
+# import streamlit_ext as ste
 from folium.plugins import Draw, Geocoder, MiniMap
 from src.config_parameters import params
 from src.utils import (
