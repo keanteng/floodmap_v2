@@ -114,10 +114,7 @@ def ee_initialize(force_use_service_account: bool = False):
     """
     if force_use_service_account or is_app_on_streamlit():
         service_account_keys = st.secrets["ee_keys"]
-        credentials = service_account.Credentials.from_service_account_info(
-            service_account_keys, scopes=oauth.SCOPES
-        )
-        ee.Initialize(credentials)
+        ee.Initialize(service_account_keys)
     else:
         ee.Initialize()
     
@@ -763,7 +760,7 @@ st.markdown("# Flood extent analysis")
 set_tool_page_style()
 
 # Initialise Google Earth Engine
-ee_initialize(force_use_service_account=True)
+# ee_initialize(force_use_service_account=True)
 
 
 # Output_created is useful to decide whether the bottom panel with the
