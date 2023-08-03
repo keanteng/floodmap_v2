@@ -271,32 +271,32 @@ if st.session_state.output_created:
                         timestamp = dt.datetime.now().strftime(
                             "%Y-%m-%d_%H-%M"
                         )
-                        with row2:
+                        # with row2:
                             # Create download buttons for raster and vector
                             # data
-                            with open("flood_extent.tif", "wb"):
-                                ste.download_button(
-                                    label="Download Raster Extent",
-                                    data=response_r.content,
-                                    file_name=(
-                                        f"{filename}"
-                                        "_raster_"
-                                        f"{timestamp}"
-                                        ".tif"
-                                    ),
-                                    mime="image/tif",
-                                )
-                            with open("flood_extent.geojson", "wb"):
-                                ste.download_button(
-                                    label="Download Vector Extent",
-                                    data=response_v.content,
-                                    file_name=(
-                                        f"{filename}"
-                                        "_vector_"
-                                        f"{timestamp}"
-                                        ".geojson"
-                                    ),
-                                    mime="text/json",
-                                )
+                            # with open("flood_extent.tif", "wb"):
+                                # ste.download_button(
+                                    # label="Download Raster Extent",
+                                    # data=response_r.content,
+                                    # file_name=(
+                                        # f"{filename}"
+                                        # "_raster_"
+                                        # f"{timestamp}"
+                                       #  ".tif"
+                                    # )# ,
+                                    # mime="image/tif",
+                                # )
+                            # with open("flood_extent.geojson", "wb"):
+                                # ste.download_button(
+                                    # label="Download Vector Extent",
+                                    # data=response_v.content,
+                                    # file_name=(
+                                        # f"{filename}"
+                                        # "_vector_"
+                                        # f"{timestamp}"
+                                       #  ".geojson"
+                                    # )# ,
+                                    # mime="text/json",
+                                # )
                         # Output for computation complete
                         st.success("Computation complete")
