@@ -3,38 +3,40 @@ import leafmap.foliumap as leafmap
 
 st.set_page_config(layout="wide")
 
+st.sidebar.title("Resources:")
 st.sidebar.info(
     """
-    - Web App URL: <https://streamlit.geemap.org>
-    - GitHub repository: <https://github.com/giswqs/streamlit-geospatial>
+    - GitHub repository: [streamlit_flood](https://github.com/keanteng/streamlit_flood)
+    - Data sources: [Flood Data](https://www.water.gov.my/)
     """
 )
 
-st.sidebar.title("Contact")
+st.sidebar.title("Created By:")
 st.sidebar.info(
     """
-    Qiusheng Wu: <https://wetlands.io>
-    [GitHub](https://github.com/giswqs) | [Twitter](https://twitter.com/giswqs) | [YouTube](https://www.youtube.com/c/QiushengWu) | [LinkedIn](https://www.linkedin.com/in/qiushengwu)
+  Khor Kean Teng | Intern, DGA, JPS, Bank Negara Malaysia | [GitHub](https://github.com/keanteng) | [LinkedIn](https://www.linkedin.com/in/khorkeanteng/)
     """
 )
 
 # Customize page title
-st.title("Streamlit for Geospatial Applications")
+st.title("👋Welcome")
 
 st.markdown(
     """
-    This multipage app template demonstrates various interactive web apps created using [streamlit](https://streamlit.io) and [leafmap](https://leafmap.org). It is an open-source project and you are very welcome to contribute to the [GitHub repository](https://github.com/giswqs/streamlit-multipage-template).
+    This is a multipage app that uses [Streamlit](https://streamlit.io) to visualize flood incidents in Malaysia from 2015 - 2022. In this app you can find different pages that visualize the data in different ways. 
+    The data for the chart is obtained from the annual report published by the Department of Irrigation and Drainage Malaysia (JPS). The app is also powered by some feature develop by 
+    [mapaction/flood mapping tool](https://github.com/mapaction/flood-mapping-tool) and [opengeos/streamlit-geospatial](https://github.com/opengeos/streamlit-geospatial) that make use of 
+    Google Earth Engine funtionality. 
     """
 )
 
-st.header("Instructions")
+st.info("👈 Check out my Git repository for installation instruction")
+
+st.header("Documentation")
 
 markdown = """
-1. For the [GitHub repository](https://github.com/giswqs/streamlit-multipage-template) or [use it as a template](https://github.com/giswqs/streamlit-multipage-template/generate) for your own project.
-2. Customize the sidebar by changing the sidebar text and logo in each Python files.
-3. Find your favorite emoji from https://emojipedia.org.
-4. Add a new app to the `pages/` directory with an emoji in the file name, e.g., `1_🚀_Chart.py`.
-
+## A. Flood Mapping Tool
+## B. Workflow
 """
 
 st.markdown(markdown)
