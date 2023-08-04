@@ -1,5 +1,6 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
+from PIL import Image
 
 st.set_page_config(layout="wide")
 
@@ -64,7 +65,8 @@ polarazations and can acquire both single horizontal or vertical or even dual po
 where pass directions and coverage frequencies are highlighted.
 """)
 
-st.image('https://imgur.com/a/hYRO5Gm')
+image1 = Image.open('https://imgur.com/a/hYRO5Gm')
+st.image(image1)
 
 st.markdown("""
 
@@ -77,8 +79,8 @@ surface texture caused by wind or rainfall may also make it difficult for radar 
 ### B. Workflow  - Malaysia Flood Statistics 
 """)
 
-
-st.image("https://imgur.com/a/uqLxshd")
+image2 = Image.open('https://imgur.com/a/uqLxshd')
+st.image(image2)
 
 st.markdown(
 """
@@ -96,6 +98,6 @@ m.to_streamlit(height=500)
 st.markdown(
     """
     ### 
-    # D. References
+    ### D. References
     """
 )
