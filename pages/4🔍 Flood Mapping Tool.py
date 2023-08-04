@@ -751,7 +751,21 @@ st.set_page_config(layout="wide", page_title=params["browser_title"])
 toggle_menu_button()
 
 # Create sidebar
-add_about()
+# add_about()
+st.sidebar.title("Resources:")
+st.sidebar.info(
+    """
+    - GitHub repository: [streamlit_flood](https://github.com/keanteng/streamlit_flood)
+    - Data sources: [Flood Data](https://www.water.gov.my/)
+    """
+)
+
+st.sidebar.title("Created By:")
+st.sidebar.info(
+    """
+  Khor Kean Teng | Intern, DGA, JPS, Bank Negara Malaysia | [GitHub](https://github.com/keanteng) | [LinkedIn](https://www.linkedin.com/in/khorkeanteng/)
+    """
+)
 
 # Page title
 st.markdown("# Flood extent analysis")
