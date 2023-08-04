@@ -35,8 +35,8 @@ st.info("👈 Check out my Git repository for installation instruction")
 st.header("Documentation")
 
 markdown = """
-## A. Flood Mapping Tool
-## B. Workflow
+###  A. Flood Mapping Tool
+### B. Workflow
 """
 
 st.markdown(markdown)
