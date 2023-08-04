@@ -99,5 +99,10 @@ st.markdown(
     """
     ### 
     ### D. References
+    1. [Map Action, Flood Mapping Tool Documentation](https://mapaction-flood-map.streamlit.app/Documentation)
+    2. [In Detail: Recommended Practice: Flood Mapping and Damage Assessment Using Sentinel-1 SAR Data in Google Earth Engine](https://un-spider.org/advisory-support/recommended-practices/recommended-practice-google-earth-engine-flood-mapping/in-detail)
+    3. [Identifying floods and flood-affected paddy rice fields in Bangladesh based on Sentinel-1 imagery and Google Earth Engine](https://www.sciencedirect.com/science/article/pii/S0924271620301702)
+    4. [Sentinel-1 Observation Scenario](https://sentinel.esa.int/web/sentinel/missions/sentinel-1/observation-scenario)
+    5. [Multi-temporal synthetic aperture radar flood mapping using change detection](https://onlinelibrary.wiley.com/doi/full/10.1111/jfr3.12303)
     """
 )
