@@ -19,6 +19,11 @@ tropycal
 earthengine-api
 streamlit-ext
 pre-commit
+pandas
+geopandas
+numpy
+leafmap
+folium
 # git+https://github.com/giswqs/leafmap
 # git+https://github.com/giswqs/geemap
 
