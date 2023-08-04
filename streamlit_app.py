@@ -34,14 +34,9 @@ st.info("Check out my Git repository for installation instruction. Read below fo
 
 st.header("Documentation")
 
-markdown = """
-### Table of contents
-1. [Flood Mapping Tool - Methodology](#1)
-2. [Workflow - Malaysia Flood Statistics](#2)
-3. [Open Street Map](#3)
-4. [References](#4)
-
-###  A. Flood Mapping Tool - Methodology <a name="1"></a>
+st.markdown(
+"""
+###  A. Flood Mapping Tool - Methodology
 
 Data set used:
 - Sential-1 synthetic-aperture radar [SAR](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD) data
@@ -67,6 +62,11 @@ GRD will report on intensity of radiation but it will lost the phase and amplitu
 polarazations and can acquire both single horizontal or vertical or even dual polzarizations. For flood water, it is best to detect using VH (vertical transmit and horizontal receive), although VV
 (vertical transmit and vertical receive) can be effective for patially submerged features. In our case, we will use VH polarization. The figure below shows the overview of the Sentinel-1 observation plan,
 where pass directions and coverage frequencies are highlighted.
+""")
+
+st.image('https://imgur.com/a/hYRO5Gm')
+
+st.markdown("""
 
 ### Limitations
 Radar imagery is good for flood detection as it is good at picking up water and not affected by the time of the day or clouds. But it can perform poorly in areas of mountainous regions, notably in narrow valleys
@@ -74,19 +74,20 @@ and urban areas. This is due to the viewing angles which caused image distortion
 surface texture caused by wind or rainfall may also make it difficult for radar imagery to identify water bodies. 
 
 
-### B. Workflow  - Malaysia Flood Statistics <a name="2"></a>
-<center><img src="https://imgur.com/a/uqLxshd"  class = "center"/></center>
-<p style="text-align: center; color:grey;"><i>Workflow to get the dataset</i></p>
+### B. Workflow  - Malaysia Flood Statistics 
+""")
 
-### C. Open Street Map <a name="3"></a>
+
+st.image("https://imgur.com/a/uqLxshd")
+
+st.markdown(
+"""
+### C. Open Street Map
 
 In this web app, all the maps make use of [OpenStreetMap](https://www.openstreetmap.org) data. OpenStreetMap is a free and open-source collaborative project to create a map of the world.
 It is built by a community of mappers that contribute and maintain data about roads, trails, cafés, railway stations, and much more, all over the world. Check out the map below for a quick
 overview of the map powered by OpenStreetMap.
-
-"""
-
-st.markdown(markdown)
+""")
 
 m = leafmap.Map(minimap_control=True)
 m.add_basemap("OpenTopoMap")
@@ -95,6 +96,6 @@ m.to_streamlit(height=500)
 st.markdown(
     """
     ### 
-    # D. References <a name="4"></a>
+    # D. References
     """
 )
