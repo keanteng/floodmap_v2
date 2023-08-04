@@ -1,24 +1,45 @@
-# streamlit-geospatial
+# Streamlit App For Flood Incidents in Malaysia
+An app powered by Streamlit to visualized the flood incidents in Malaysia from 2015 to 2022. 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://floodmapv2-wnakuiqz4idj5pr4ugzemq.streamlit.app/)
 
-A streamlit multipage app for geospatial applications. It can be deployed to [Streamlit Cloud](https://streamlit.io/cloud), [Heroku](https://heroku.com/), or [MyBinder](https://mybinder.org/).
+## Flood Mapping Tool
+The web app contains a feature to allow user to estimate flood extent using Sentinel-1 synthetic-aperture radar SAR data. 
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/giswqs/streamlit-geospatial/master?urlpath=proxy/8501/)
+## Using this repository
+1. Make sure you have installed all the packages in `requirements.txt`
+2. If you are running this repo on your local Windows machine, you will probably encounter `fcntl module not found ` error. But this repo can still do fine on the web app
+    - Go to [Google Earth Engine ](https://earthengine.google.com/) and create an account
+    - Go to Windows terminal:
+    ```python
+    py -m pip install ee
+    import ee
+    ee.Authenticate()
+    ```
+    - You will need to paste the authorization code back on the terminal. Once the step is complete, you can find the token on your local machine at `C:\\Users\\Username\\.congif\\earthengine\\credentials`
+3. Now assuming you have created an empty repository on you GitHub account and put everything in this repository there
+    - Go to [Streamlit](https://streamlit.io/) and create an account there. Remember to link to your GitHub account. 
+    - Then you need to deploy your repository you created just now. 
+    - Before you click deploy, select advanced option and fill up the secret using the information in `C:\\Users\\Username\\.congif\\earthengine\\credentials`. You need to copy everything there. 
+    ```toml
+    EARTHENGINE_TOKEN = 'PASTE WHAT YOU COPY HERE'
+    ee_keys = 'PASTE WHAT YOU COPY HERE'
+    ```
 
-- Web app: <https://streamlit.geemap.org>
-- Source code: <https://github.com/giswqs/streamlit-geospatial>
+## Updates
+1. 8/1/2023 
+    - Perform second run for geocoding to check performance deviation
+2. 8/2/2023 
+    - Perform alternative run for geocoding using address format: Place, Region
+    - Perform reverse geocode to check geocoding accuracy
+    - Updates maps and app contents
+3. 8/3/2023
+    - Perform reverse geocoding to search location postal code
+    - Explore on adding [flood mapping tool](https://github.com/mapaction/flood-mapping-tool) and some [geospatial application](https://github.com/opengeos/streamlit-geospatial)
+4. 8/4/2023
+    - Updates web app features based on previous exploration for tool
 
-## Instructions
+## References
+1. [mapaction/flood mapping tool](https://github.com/mapaction/flood-mapping-tool)
+2. [opengeos/streamlit-geospatial](https://github.com/opengeos/streamlit-geospatial)
 
-1. For the GitHub repository to your GitHub account.
-2. Customize the sidebar by changing the sidebar text and logo in each Python file.
-3. Find your favorite emoji from https://emojipedia.org.
-4. Add a new app to the `pages/` directory with an emoji in the file name, e.g., 1_🚀_Chart.py.
-
-## Demo
-
-![](https://i.imgur.com/6lj0oAO.png)
-
-## Real Estate Data and Market Trends
-
-![](https://i.imgur.com/Z3dk6Tr.gif)
-# floodmap_v2
+Internship Project © 2023
