@@ -65,7 +65,7 @@ polarazations and can acquire both single horizontal or vertical or even dual po
 where pass directions and coverage frequencies are highlighted.
 """)
 
-image1 = Image.open('analytics/images/image1')
+image1 = Image.open('images/image1.png')
 st.image(image1)
 
 st.markdown("""
@@ -79,7 +79,7 @@ surface texture caused by wind or rainfall may also make it difficult for radar 
 ### B. Workflow  - Malaysia Flood Statistics 
 """)
 
-image2 = Image.open('analytics/images/image2')
+image2 = Image.open('images/image2.jpg')
 st.image(image2)
 
 st.markdown(
