@@ -1040,6 +1040,10 @@ if st.session_state.output_created:
                         # Output for computation complete
                         st.success("Computation complete")
 
-with st.expander("Further Analysis", expanded=True):
+with st.expander("Further Analysis", expanded=False):
     with st.echo():
-        st.session_state.Map2.to_streamlit(height = 700)
+        m = st.session_state.Map2
+        cities = pd.read_csv("analysis/data2/all_states_all_years_geocoded.csv")
+        m.add_points_from_xy(cities, x="longitude", y="latitude")
+        
+        m.to_streamlit(height = 700)
