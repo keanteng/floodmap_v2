@@ -1076,6 +1076,8 @@ with st.expander("Further Analysis", expanded=False):
             x="Longitude",
             y="Latitude",
             radius=10,
+            icon_names=['gear', 'map', 'leaf', 'globe'],
+            color="blue", fill_color="black",
         )
         
         m.add_heatmap(
