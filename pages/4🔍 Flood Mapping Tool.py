@@ -930,6 +930,7 @@ if submitted:
                     Draw_export=False,
                     locate_control=False,
                     plugin_LatLngPopup=False,
+                    scale_ctrl = True,
                 )
                 try:
                     # Add flood vector layer to map
