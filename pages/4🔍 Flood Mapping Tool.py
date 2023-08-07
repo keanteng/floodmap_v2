@@ -1054,6 +1054,7 @@ with st.expander("Further Analysis", expanded=False):
             )
             
             detected_flood_raster = st.session_state.detected_flood_raster
+            detected_flood_vector = st.session_state.detected_flood_vector
             m.add_layer(
                 ee_object=detected_flood_raster,
                 name="Flood extent raster",
