@@ -1070,7 +1070,7 @@ with st.expander("Further Analysis", expanded=False):
         slider = st.slider(
             label="Select Radius Size",
             min_value=0.001,
-            max_value=0.1,
+            max_value=0.01,
             value=0.001,
             step=0.01,
         )
