@@ -1075,46 +1075,12 @@ with st.expander("Further Analysis", expanded=False):
             step=0.001,
         ) # to run this need a new loop 
         
-        if slider == 0.001:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        elif slider == 0.002:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        elif slider == 0.003:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        elif slider == 0.004:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        elif slider == 0.005:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)     
-        elif slider == 0.006:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        elif slider == 0.007:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider) 
-        elif slider == 0.008:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        elif slider == 0.009:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
-        else:
-            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-            two_mile_buffer = data.geometry.buffer(slider)
-            st.write("Radius Size = ", slider)
+        def getData(slider):
+            return slider
+        
+        data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+        two_mile_buffer = data.geometry.buffer(getData(slider))
+        st.write("Radius Size = ", getData(slider))
         
         m.add_points_from_xy(
             cities, 
