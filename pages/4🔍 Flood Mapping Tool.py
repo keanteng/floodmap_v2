@@ -1053,6 +1053,7 @@ with st.expander("Further Analysis", expanded=False):
                 icon_names=['gear', 'map', 'leaf', 'globe'],
             )
             
+            detected_flood_raster = st.session_state.detected_flood_raster
             m.add_layer(
                 ee_object=detected_flood_raster,
                 name="Flood extent raster",
