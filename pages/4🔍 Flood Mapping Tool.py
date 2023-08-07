@@ -1072,15 +1072,6 @@ with st.expander("Further Analysis", expanded=False):
             # icon_names=['gear', 'map', 'leaf', 'globe'],
         # )
         
-        m.add_circle_markers_from_xy(
-            cities,
-            x="Longitude",
-            y="Latitude",
-            radius=10,
-            icon_names=['gear', 'map', 'leaf', 'globe'],
-            color="blue", fill_color="black",
-        )
-        
         m.add_heatmap(
             cities,
             latitude="Latitude",
@@ -1088,6 +1079,16 @@ with st.expander("Further Analysis", expanded=False):
             name="Heat map",
             value = "Year", # becomes frequency: some place flood a few times in a year, but also affect by reporting duration (data collection part)
             radius=20,
+        )
+        
+        cities = "https://github.com/keanteng/floodmap_v2/blob/main/analytics/data2/all_states_all_years_geocoded.csv"
+        m.add_circle_markers_from_xy(
+            cities,
+            x="Longitude",
+            y="Latitude",
+            radius=10,
+            icon_names=['gear', 'map', 'leaf', 'globe'],
+            color="blue", fill_color="black",
         )
         
         detected_flood_raster = st.session_state.detected_flood_raster
