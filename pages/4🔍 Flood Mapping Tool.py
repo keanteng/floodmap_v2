@@ -1050,6 +1050,7 @@ with st.expander("Further Analysis", expanded=False):
         cities = cities[['Name', 'Latitude', 'Longitude', 'Year']]
         
         button = st.slider("Year", 2015,2022,2015)
+        
         if button == 2015:
             cities = cities[cities['Year'] == 2015]
         elif button == 2016:
