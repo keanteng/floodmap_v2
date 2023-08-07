@@ -1041,28 +1041,46 @@ if st.session_state.output_created:
                         st.success("Computation complete")
 
 with st.expander("Further Analysis", expanded=False):
-    with st.echo():
-        if st.session_state.output_created:
-            m = geemap.Map()
-            cities = pd.read_csv("analytics/data2/all_states_all_years_geocoded.csv")
-            cities = cities[['Name', 'Latitude', 'Longitude', 'Year']]
-            m.add_points_from_xy(
-                cities, 
-                x="Longitude", 
-                y="Latitude",
-                icon_names=['gear', 'map', 'leaf', 'globe'],
-            )
-            
-            detected_flood_raster = st.session_state.detected_flood_raster
-            detected_flood_vector = st.session_state.detected_flood_vector
-            m.add_layer(
-                ee_object=detected_flood_raster,
-                name="Flood extent raster",
-            )
-            m.add_layer(
-                ee_object=detected_flood_vector,
-                name="Flood extent vector",
-            )
-            m.to_streamlit(height = 700)
+    if st.session_state.output_created:
+        m = geemap.Map()
+        cities = pd.read_csv("analytics/data2/all_states_all_years_geocoded.csv")
+        cities = cities[['Name', 'Latitude', 'Longitude', 'Year']]
+        
+        button = st.slider("Year", 2015,2022,2015)
+        if button == 2015:
+            data = data[data['Year'] == 2015]
+        elif button == 2016:
+            data = data[data['Year'] == 2016]
+        elif button == 2017:
+            data = data[data['Year'] == 2017]
+        elif button == 2018:
+            data = data[data['Year'] == 2018]
+        elif button == 2019:
+            data = data[data['Year'] == 2019]
+        elif button == 2020:
+            data = data[data['Year'] == 2020]
+        elif button == 2021:
+            data = data[data['Year'] == 2021]
         else:
-            st.error("Error: No output created yet.")
+            data = data[data['Year'] == 2022]
+        
+        m.add_points_from_xy(
+            cities, 
+            x="Longitude", 
+            y="Latitude",
+            icon_names=['gear', 'map', 'leaf', 'globe'],
+        )
+        
+        detected_flood_raster = st.session_state.detected_flood_raster
+        detected_flood_vector = st.session_state.detected_flood_vector
+        m.add_layer(
+            ee_object=detected_flood_raster,
+            name="Flood extent raster",
+        )
+        m.add_layer(
+            ee_object=detected_flood_vector,
+            name="Flood extent vector",
+        )
+        m.to_streamlit(height = 700)
+    else:
+        st.error("Error: No output created yet.")
