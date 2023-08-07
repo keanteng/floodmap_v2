@@ -1064,12 +1064,12 @@ with st.expander("Further Analysis", expanded=False):
         else:
             cities = cities[cities['Year'] == 2022]
         
-        m.add_points_from_xy(
-            cities, 
-            x="Longitude", 
-            y="Latitude",
-            icon_names=['gear', 'map', 'leaf', 'globe'],
-        )
+        # m.add_points_from_xy(
+            # cities, 
+            # x="Longitude", 
+            # y="Latitude",
+            # icon_names=['gear', 'map', 'leaf', 'globe'],
+        # )
         
         m.add_circle_markers_from_xy(
             cities,
