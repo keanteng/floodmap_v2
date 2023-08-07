@@ -3,6 +3,7 @@ import datetime as dt
 
 import ee
 import folium
+import geemap
 import geemap.foliumap as geemap
 import requests
 import streamlit as st
