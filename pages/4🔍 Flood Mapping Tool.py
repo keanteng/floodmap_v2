@@ -1068,12 +1068,11 @@ with st.expander("Further Analysis", expanded=False):
             cities = cities[cities['Year'] == 2022]
         
         slider = st.slider(
-            label="Select a threshold",
+            label="Select Radius Size",
             min_value=0.001,
             max_value=0.1,
             value=0.001,
             step=0.01,
-            on_change=callback,
         )
         
         m.add_points_from_xy(
