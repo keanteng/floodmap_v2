@@ -1073,8 +1073,38 @@ with st.expander("Further Analysis", expanded=False):
             max_value=0.01,
             value=0.001,
             step=0.001,
-            on_change=callback,
         ) # to run this need a new loop 
+        
+        if slider == 0.001:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        elif slider == 0.002:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        elif slider == 0.003:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        elif slider == 0.004:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        elif slider == 0.005:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)     
+        elif slider == 0.006:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        elif slider == 0.007:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider) 
+        elif slider == 0.008:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        elif slider == 0.009:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
+        else:
+            data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+            two_mile_buffer = data.geometry.buffer(slider)
         
         m.add_points_from_xy(
             cities, 
@@ -1093,8 +1123,6 @@ with st.expander("Further Analysis", expanded=False):
         )
         
         # add layer code section
-        data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-        two_mile_buffer = data.geometry.buffer(slider)
         m.add_geojson(GeoJson(two_mile_buffer.geometry.to_crs(epsg=4326)).data, fill_colors=['blue'], layer_name = "Asset At Risk")
         ############################
         
