@@ -1048,21 +1048,21 @@ with st.expander("Further Analysis", expanded=False):
         
         button = st.slider("Year", 2015,2022,2015)
         if button == 2015:
-            data = data[data['Year'] == 2015]
+            cities = cities[cities['Year'] == 2015]
         elif button == 2016:
-            data = data[data['Year'] == 2016]
+            cities = cities[cities['Year'] == 2016]
         elif button == 2017:
-            data = data[data['Year'] == 2017]
+            cities = cities[cities['Year'] == 2017]
         elif button == 2018:
-            data = data[data['Year'] == 2018]
+            cities = cities[cities['Year'] == 2018]
         elif button == 2019:
-            data = data[data['Year'] == 2019]
+            cities = cities[cities['Year'] == 2019]
         elif button == 2020:
-            data = data[data['Year'] == 2020]
+            cities = cities[cities['Year'] == 2020]
         elif button == 2021:
-            data = data[data['Year'] == 2021]
+            cities = cities[cities['Year'] == 2021]
         else:
-            data = data[data['Year'] == 2022]
+            cities = cities[cities['Year'] == 2022]
         
         m.add_points_from_xy(
             cities, 
