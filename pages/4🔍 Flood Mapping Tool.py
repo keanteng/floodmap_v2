@@ -6,6 +6,7 @@ import folium
 import geemap.foliumap as geemap
 import requests
 import streamlit as st
+import pandas as pd
 # import streamlit_ext as ste
 from folium.plugins import Draw, Geocoder, MiniMap
 from streamlit_folium import st_folium
@@ -940,7 +941,7 @@ if submitted:
                     # Center map on flood raster
                     Map2.centerObject(detected_flood_raster)
                     
-                    cities = 'analytics/data2/all_states_all_years_geocoded_run2.csv'
+                    cities = pd.read_csv('analytics/data2/all_states_all_years_geocoded_run2.csv')
                     Map2.add_points_from_xy(
                         cities,
                         x="Longitude",
