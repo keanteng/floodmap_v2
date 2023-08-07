@@ -937,13 +937,15 @@ if submitted:
                         ee_object=detected_flood_vector,
                         name="Flood extent vector",
                     )
+                    # Center map on flood raster
+                    Map2.centerObject(detected_flood_raster)
+                    
+                    cities = 'analytics/data2/all_states_all_years_geocoded_run2.csv'
                     Map2.add_points_from_xy(
-                        'analytics/data2/all_states_all_years_geocoded_run2.csv',
+                        cities,
                         x="Longitude",
                         y="Latitude",
                     )
-                    # Center map on flood raster
-                    Map2.centerObject(detected_flood_raster)
                 except ee.EEException:
                     # If error contains the sentence below, it means that
                     # an image could not be properly generated
