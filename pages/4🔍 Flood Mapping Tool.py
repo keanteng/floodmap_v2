@@ -1043,7 +1043,7 @@ if st.session_state.output_created:
 with st.expander("Further Analysis", expanded=False):
     with st.echo():
         if st.session_state.output_created:
-            m = st.session_state.Map2.to_streamlit(height = 700)
+            m = geemap.Map()
             cities = pd.read_csv("analytics/data2/all_states_all_years_geocoded.csv")
             cities = cities[['Name', 'Latitude', 'Longitude', 'Year']]
             m.add_points_from_xy(
