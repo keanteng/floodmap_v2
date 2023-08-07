@@ -1073,7 +1073,8 @@ with st.expander("Further Analysis", expanded=False):
             max_value=0.01,
             value=0.001,
             step=0.01,
-        )
+            on_change=callback,
+        ) # to run this need a new loop 
         
         m.add_points_from_xy(
             cities, 
