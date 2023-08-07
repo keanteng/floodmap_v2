@@ -1044,6 +1044,7 @@ with st.expander("Further Analysis", expanded=False):
     with st.echo():
         m = st.session_state.Map2
         cities = pd.read_csv("analytics/data2/all_states_all_years_geocoded.csv")
+        cities = cities[['Name', 'Latitude', 'Longitude', 'Year']]
         m.add_points_from_xy(cities, x="Longitude", y="Latitude")
         
         m.to_streamlit(height = 700)
