@@ -928,9 +928,8 @@ if submitted:
                     # basemap="HYBRID",
                     plugin_Draw=False,
                     Draw_export=False,
-                    locate_control=True,
+                    locate_control=False,
                     plugin_LatLngPopup=False,
-                    scale_ctrl = True,
                 )
                 try:
                     # Add flood vector layer to map
