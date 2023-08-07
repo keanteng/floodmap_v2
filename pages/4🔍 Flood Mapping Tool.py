@@ -8,6 +8,7 @@ import geemap.foliumap as geemap
 import requests
 import streamlit as st
 import pandas as pd
+import geopandas as gpd
 # import streamlit_ext as ste
 from folium.plugins import Draw, Geocoder, MiniMap
 from streamlit_folium import st_folium
@@ -1081,15 +1082,12 @@ with st.expander("Further Analysis", expanded=False):
             radius=20,
         )
         
-        cities = "https://github.com/keanteng/floodmap_v2/blob/main/analytics/data2/all_states_all_years_geocoded.csv"
-        m.add_circle_markers_from_xy(
-            cities,
-            x="Longitude",
-            y="Latitude",
-            radius=10,
-            icon_names=['gear', 'map', 'leaf', 'globe'],
-            color="blue", fill_color="black",
-        )
+        # add layer code section
+        data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
+        two_mile_buffer = data.geometry.buffer(.0007)
+        m = geemap.Map(center=[40, 104], zoom=4)
+        m.add_geojson(GeoJson(two_mile_buffer.geometry.to_crs(epsg=4326)).data, fill_colors=['blue'])
+        ############################
         
         detected_flood_raster = st.session_state.detected_flood_raster
         detected_flood_vector = st.session_state.detected_flood_vector
