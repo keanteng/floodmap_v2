@@ -97,7 +97,6 @@ m.to_streamlit(height=500)
 
 st.markdown(
     """
-    ### 
     ### D. References
     1. [Map Action, Flood Mapping Tool Documentation](https://mapaction-flood-map.streamlit.app/Documentation)
     2. [In Detail: Recommended Practice: Flood Mapping and Damage Assessment Using Sentinel-1 SAR Data in Google Earth Engine](https://un-spider.org/advisory-support/recommended-practices/recommended-practice-google-earth-engine-flood-mapping/in-detail)

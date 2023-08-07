@@ -937,6 +937,11 @@ if submitted:
                         ee_object=detected_flood_vector,
                         name="Flood extent vector",
                     )
+                    Map2.add_points_from_xy(
+                        'analytics/data2/all_states_all_years_geocoded_run2.csv',
+                        x="Longitude",
+                        y="Latitude",
+                    )
                     # Center map on flood raster
                     Map2.centerObject(detected_flood_raster)
                 except ee.EEException:
@@ -975,7 +980,7 @@ if st.session_state.output_created:
             # Export Map2 to streamlit
             st.session_state.Map2.to_streamlit()
             # Create button to export to file
-            submitted2 = st.button("Export to file")
+            # submitted2 = st.button("Export to file")
             # What happens if button is clicked on?
             if submitted2:
                 # Add output for computation
