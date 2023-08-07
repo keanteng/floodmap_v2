@@ -1042,7 +1042,7 @@ if st.session_state.output_created:
 
 with st.expander("Further Analysis", expanded=False):
     if st.session_state.output_created:
-        m = geemap.Map()
+        m = geemap.Map(center=(4, 108), zoom=4)
         cities = pd.read_csv("analytics/data2/all_states_all_years_geocoded.csv")
         cities = cities[['Name', 'Latitude', 'Longitude', 'Year']]
         
