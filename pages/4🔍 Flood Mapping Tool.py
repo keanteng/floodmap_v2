@@ -9,6 +9,7 @@ import requests
 import streamlit as st
 import pandas as pd
 import geopandas as gpd
+from folium import GeoJson
 # import streamlit_ext as ste
 from folium.plugins import Draw, Geocoder, MiniMap
 from streamlit_folium import st_folium
