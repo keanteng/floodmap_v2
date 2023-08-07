@@ -928,7 +928,7 @@ if submitted:
                     # basemap="HYBRID",
                     plugin_Draw=False,
                     Draw_export=False,
-                    locate_control=False,
+                    locate_control=True,
                     plugin_LatLngPopup=False,
                     scale_ctrl = True,
                 )
