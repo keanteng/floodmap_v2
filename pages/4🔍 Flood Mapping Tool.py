@@ -1071,6 +1071,13 @@ with st.expander("Further Analysis", expanded=False):
             icon_names=['gear', 'map', 'leaf', 'globe'],
         )
         
+        m.add_circle_markers_from_xy(
+            cities,
+            x="Longitude",
+            y="Latitude",
+            radius=10,
+        )
+        
         m.add_heatmap(
             cities,
             latitude="Latitude",

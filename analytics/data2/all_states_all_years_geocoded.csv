@@ -93,7 +93,7 @@ Year,Date_Temp,Date,State,Region,Place,Name,Line Check,Latitude,Longitude,geomet
 2015,1-Nov,11/1/2015,Labuan,Labuan,Kg. Batu Manikar,"Kg. Batu Manikar, Labuan, Labuan",1,5.3805825,115.2297545,POINT (115.2297545 5.3805825)
 2015,6-Sep,9/6/2015,Labuan,Labuan,Kg. Lubok Temiang,"Kg. Lubok Temiang, Labuan, Labuan",1,5.3703535,115.2404231,POINT (115.2404231 5.3703535)
 2015,6-Dec,12/6/2015,Labuan,Labuan,Kg. Ganggarak,"Kg. Ganggarak, Labuan, Labuan",1,5.3667589,115.2271199,POINT (115.2271199 5.3667589)
-2015,17/12,17/12/2015,Labuan,Labuan,Kg. Sg. Buton,"Kg. Sg. Buton, Labuan, Labuan",1,-4.4961383,122.8902162,POINT (122.8902162 -4.4961383)
+2015,17/12,17/12/2015,Labuan,Labuan,Kg. Sg. Buton,"Kg. Sg. Buton, Labuan, Labuan",1,5.2898304,115.1958561,POINT (115.1958561 5.2898304)
 2015,17/12,17/12/2015,Labuan,Labuan,kg. Sg. Lada,"kg. Sg. Lada, Labuan, Labuan",1,5.3286044,115.1911884,POINT (115.1911884 5.3286044)
 2015,2-Jun,6/2/2015,Melaka,Alor Gajah,Kg. Gadek,"Kg. Gadek, Alor Gajah, Melaka",1,2.4066869,102.2473406,POINT (102.2473406 2.4066869)
 2015,2-Jun,6/2/2015,Melaka,Alor Gajah,Kg. Pengkalan,"Kg. Pengkalan, Alor Gajah, Melaka",1,2.379126,102.2202129,POINT (102.2202129 2.379126)
