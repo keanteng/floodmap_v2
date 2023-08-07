@@ -1042,4 +1042,4 @@ if st.session_state.output_created:
 
 with st.expander("Further Analysis", expanded=True):
     with st.echo():
-        st.session_state.Map2.to_streamlit(height = "700")
+        st.session_state.Map2.to_streamlit(height = 700)
