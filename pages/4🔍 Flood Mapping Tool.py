@@ -1071,6 +1071,15 @@ with st.expander("Further Analysis", expanded=False):
             icon_names=['gear', 'map', 'leaf', 'globe'],
         )
         
+        m.add_heatmap(
+            cities,
+            latitude="Latitude",
+            longitude="Longitude",
+            name="Heat map",
+            value = "Year", # becomes frequency: some place flood a few times in a year, but also affect by reporting duration (data collection part)
+            radius=20,
+        )
+        
         detected_flood_raster = st.session_state.detected_flood_raster
         detected_flood_vector = st.session_state.detected_flood_vector
         m.add_layer(
