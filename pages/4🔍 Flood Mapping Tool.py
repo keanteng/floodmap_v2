@@ -1086,7 +1086,6 @@ with st.expander("Further Analysis", expanded=False):
         # add layer code section
         data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
         two_mile_buffer = data.geometry.buffer(.0007)
-        m = geemap.Map(center=[40, 104], zoom=4)
         m.add_geojson(GeoJson(two_mile_buffer.geometry.to_crs(epsg=4326)).data, fill_colors=['blue'])
         ############################
         
