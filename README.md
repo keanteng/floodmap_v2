@@ -38,6 +38,9 @@ The web app contains a feature to allow user to estimate flood extent using Sent
     - Explore on adding [flood mapping tool](https://github.com/mapaction/flood-mapping-tool) and some [geospatial application](https://github.com/opengeos/streamlit-geospatial)
 4. 8/4/2023
     - Updates web app features based on previous exploration for tool
+5. 8/7/2023
+    - On Flood Mapping Tool pages, add an overlay for flood points
+        - Include sizeable circle around each flood points
 
 ## References
 1. [mapaction/flood mapping tool](https://github.com/mapaction/flood-mapping-tool)
