@@ -976,7 +976,7 @@ if st.session_state.output_created:
             # Export Map2 to streamlit
             st.session_state.Map2.to_streamlit()
             # Create button to export to file
-            # submitted2 = st.button("Export to file")
+            submitted2 = st.button("Export to file")
             # What happens if button is clicked on?
             if submitted2:
                 # Add output for computation
@@ -1039,3 +1039,7 @@ if st.session_state.output_created:
                                 # )
                         # Output for computation complete
                         st.success("Computation complete")
+
+with st.expander("Further Analysis", expanded=True):
+    with st.echo():
+        st.session_state.Map2.to_streamlit(height = "700")
