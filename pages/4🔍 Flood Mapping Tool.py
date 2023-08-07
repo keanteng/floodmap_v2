@@ -1068,11 +1068,11 @@ with st.expander("Further Analysis", expanded=False):
             cities = cities[cities['Year'] == 2022]
         
         slider = st.slider(
-            label="Select Radius Size",
+            label="Select Radius Size: Deafult 0.001",
             min_value=0.001,
             max_value=0.01,
             value=0.001,
-            step=0.01,
+            step=0.001,
             on_change=callback,
         ) # to run this need a new loop 
         
