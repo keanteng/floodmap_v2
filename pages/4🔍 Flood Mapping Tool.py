@@ -1067,6 +1067,15 @@ with st.expander("Further Analysis", expanded=False):
         else:
             cities = cities[cities['Year'] == 2022]
         
+        slider = st.slider(
+            label="Select a threshold",
+            min_value=0.001,
+            max_value=0.1,
+            value=0.001,
+            step=0.01,
+            on_change=callback,
+        )
+        
         m.add_points_from_xy(
             cities, 
             x="Longitude", 
@@ -1085,7 +1094,7 @@ with st.expander("Further Analysis", expanded=False):
         
         # add layer code section
         data = gpd.GeoDataFrame(cities, geometry = gpd.points_from_xy(cities.Longitude, cities.Latitude), crs = "EPSG:4326")
-        two_mile_buffer = data.geometry.buffer(.001)
+        two_mile_buffer = data.geometry.buffer(slider)
         m.add_geojson(GeoJson(two_mile_buffer.geometry.to_crs(epsg=4326)).data, fill_colors=['blue'], layer_name = "Asset At Risk")
         ############################
         
