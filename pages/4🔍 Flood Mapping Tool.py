@@ -940,10 +940,6 @@ if submitted:
                     )
                     # Center map on flood raster
                     Map2.centerObject(detected_flood_raster)
-                    
-                    cities = pd.read_csv('analytics/data2/all_states_all_years_geocoded_run2.csv')
-                    Map2.add_point_layer(cities, 
-                        popup=["longtitude", "latitude"], layer_name="Flood Incidents")
                 except ee.EEException:
                     # If error contains the sentence below, it means that
                     # an image could not be properly generated
