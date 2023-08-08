@@ -18,7 +18,6 @@ streamlit-keplergl
 tropycal
 earthengine-api
 streamlit-ext
-pre-commit
 pandas
 geopandas
 numpy
