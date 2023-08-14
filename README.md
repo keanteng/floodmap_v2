@@ -1,8 +1,6 @@
 # Streamlit App For Flood Incidents in Malaysia
 An app powered by Streamlit to visualize the flood incidents in Malaysia from 2015 to 2022. 
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://floodmapv2-wnakuiqz4idj5pr4ugzemq.streamlit.app/)
-
 ## Flood Mapping Tool
 The web app contains a feature to allow user to estimate flood extent using Sentinel-1 synthetic-aperture radar SAR data. 
 
