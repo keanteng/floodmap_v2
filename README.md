@@ -1,6 +1,8 @@
 # Streamlit App For Flood Incidents in Malaysia
 An app powered by Streamlit to visualize the flood incidents in Malaysia from 2015 to 2022. 
 
+> This is an old repo, the new repo is moved to streanlitfloodv2
+
 ## Flood Mapping Tool
 The web app contains a feature to allow user to estimate flood extent using Sentinel-1 synthetic-aperture radar SAR data. 
 
